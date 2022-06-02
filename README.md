@@ -61,4 +61,4 @@ MSA Maker이 제공한 템플릿 프로젝트는 설계된 룰에 포함된 마�
 
 ### Rest API 제공
 PostMan에 import 가능한 json 파일을 제공합니다.
-[link](#)
+🖇️ [link](https://github.com/bespinglobal-cne/msa-sample/blob/main/file/msa-maker-sample.postman_collection.json)
