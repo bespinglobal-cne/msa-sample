@@ -1,0 +1,340 @@
+{
+	"info": {
+		"_postman_id": "d1c10da5-b971-4e8c-8987-565c0573a713",
+		"name": "DEMO BACKEND API : 상품구매서비스",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11943016"
+	},
+	"item": [
+		{
+			"name": "POINT Service",
+			"item": [
+				{
+					"name": "포인트 사용 내역 조회 API",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{demo-server-ip}}:{{point-service-port}}/point/api/demo_kim",
+							"protocol": "http",
+							"host": [
+								"{{demo-server-ip}}"
+							],
+							"port": "{{point-service-port}}",
+							"path": [
+								"point",
+								"api",
+								"demo_kim"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "포인트 계좌 생성 API",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://{{demo-server-ip}}:{{point-service-port}}/point/api",
+							"protocol": "http",
+							"host": [
+								"{{demo-server-ip}}"
+							],
+							"port": "{{point-service-port}}",
+							"path": [
+								"point",
+								"api"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "포인트 계좌 정보 조회 API",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{demo-server-ip}}:{{point-service-port}}/point/api",
+							"protocol": "http",
+							"host": [
+								"{{demo-server-ip}}"
+							],
+							"port": "{{point-service-port}}",
+							"path": [
+								"point",
+								"api"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "포인트 사용 API",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\" : \"-1000\",\n    \"notes\": \"새우깡 \"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{demo-server-ip}}:{{point-service-port}}/point/api",
+							"protocol": "http",
+							"host": [
+								"{{demo-server-ip}}"
+							],
+							"port": "{{point-service-port}}",
+							"path": [
+								"point",
+								"api"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "포인트 \b이벤트 적립 [500원] API",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://{{demo-server-ip}}:{{point-service-port}}/point/api/pay/demo_kim/event",
+							"protocol": "http",
+							"host": [
+								"{{demo-server-ip}}"
+							],
+							"port": "{{point-service-port}}",
+							"path": [
+								"point",
+								"api",
+								"pay",
+								"demo_kim",
+								"event"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "MEMBER Service",
+			"item": [
+				{
+					"name": "계좌 내역 조회 API",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{demo-server-ip}}:{{member-service-port}}/member/api/account/demo_kim",
+							"protocol": "http",
+							"host": [
+								"{{demo-server-ip}}"
+							],
+							"port": "{{member-service-port}}",
+							"path": [
+								"member",
+								"api",
+								"account",
+								"demo_kim"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "맴버 계좌 생성 [자동생성] API",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://{{demo-server-ip}}:{{member-service-port}}/member/api",
+							"protocol": "http",
+							"host": [
+								"{{demo-server-ip}}"
+							],
+							"port": "{{member-service-port}}",
+							"path": [
+								"member",
+								"api"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "멤버 정보 조회 API",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{demo-server-ip}}:{{member-service-port}}/member/api",
+							"protocol": "http",
+							"host": [
+								"{{demo-server-ip}}"
+							],
+							"port": "{{member-service-port}}",
+							"path": [
+								"member",
+								"api"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "계좌 이벤트 적립 [5000원] API",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://{{demo-server-ip}}:{{member-service-port}}/member/api/charge/demo_kim/event",
+							"protocol": "http",
+							"host": [
+								"{{demo-server-ip}}"
+							],
+							"port": "{{member-service-port}}",
+							"path": [
+								"member",
+								"api",
+								"charge",
+								"demo_kim",
+								"event"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "멤버 계좌 사용 API",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\" : \"1000\",\n    \"notes\": \"아이스 아메리카노\",\n    \"type\" : \"DECREASE\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{demo-server-ip}}:{{member-service-port}}/member/api/charge/1",
+							"protocol": "http",
+							"host": [
+								"{{demo-server-ip}}"
+							],
+							"port": "{{member-service-port}}",
+							"path": [
+								"member",
+								"api",
+								"charge",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DEMO routing request 요청 API",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"route_id\":\"rt_20220523010636\",\n\t\"route_payload\":\n\t\t{\n\t\t\t\"service_name\":\"member\",\n\t\t\t\"payload\":{\n                \"money\" : 99,\n                \"point\": 2000\n            }\n        }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{runner-api-url}}:{{runner-api-port}}/runner/routeRequest",
+					"protocol": "http",
+					"host": [
+						"{{runner-api-url}}"
+					],
+					"port": "{{runner-api-port}}",
+					"path": [
+						"runner",
+						"routeRequest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DEMO 트랜잭션 결과 확인 API",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{runner-api-url}}:{{runner-api-port}}/running-data?txId=트랜잭션아이디",
+					"protocol": "http",
+					"host": [
+						"{{runner-api-url}}"
+					],
+					"port": "{{runner-api-port}}",
+					"path": [
+						"running-data"
+					],
+					"query": [
+						{
+							"key": "txId",
+							"value": "트랜잭션아이디"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "demo-server-ip",
+			"value": "127.0.0.1",
+			"type": "string"
+		},
+		{
+			"key": "point-service-port",
+			"value": "1006",
+			"type": "string"
+		},
+		{
+			"key": "member-service-port",
+			"value": "1007",
+			"type": "string"
+		}
+	]
+}
