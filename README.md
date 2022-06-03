@@ -3,7 +3,7 @@ MSA Maker를 이용해 서비스간 Transaction을 연결하여 쉽게 Routing R
 
 설계한 Routing Rule을 구성한 서비스는 템플릿으로 제공받을 수 있으며, 본 프로젝트는 MSA Maker에서 내려받은 템플릿을 사용해서 개발을 진행하였습니다.
 
-MSA Maker이 제공한 템플릿 프로젝트는 설계된 룰에 포함된 마이크로 서비스 간의 통신을 미리 설정해두었기 때문에, 개발자들는 트랜잭션에 대한 걱정없이 비즈니스 로직에만 온전히 집중할 수 있습니다.
+MSA Maker이 제공한 템플릿 프로젝트는 설계된 룰에 포함된 마이크로 서비스 간의 통신을 미리 설정해두었기 때문에, 개발자들은 트랜잭션에 대한 걱정없이 비즈니스 로직에만 온전히 집중할 수 있습니다.
 
 <br>
 
@@ -46,8 +46,17 @@ MSA Maker이 제공한 템플릿 프로젝트는 설계된 룰에 포함된 마�
 ### 실행 조건
 - 본 서비스에 라우팅 요청을 보내기 위해서는 MSA Maker가 설치된 환경이어야 합니다.
 - MSA Maker 서비스와 통신하는 kafka 리소스를 바라봐야 합니다.
+- 각 서비스는 MySQL 데이터베이스에 데이터를 저장합니다.
 
 ### 실행
+- `backing-service` 경로로 이동하여 docker-compose 파일을 통해 간단히 리소스를 실행시킬 수 있습니다. <br> MySQL 데이터 베이스를 포함한 리소스를 실행합니다.
+    ```shell
+        docker-compose up
+    ```
+    Apple Silicon의 M1 모델에서 실행 테스트를 한다면 하단 명령어를 실행해 주세요.
+    ```shell
+        docker-compose -f docker-compose-for-m1.yml up
+    ```
 - local profile의 application.yaml을 기본 제공합니다.
 - member, point 총 2개의 서비스를 실행합니다.
 <br>

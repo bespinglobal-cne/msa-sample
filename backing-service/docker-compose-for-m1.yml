@@ -1,0 +1,61 @@
+version: '3.4'
+
+services:
+
+  zookeeper:
+    image: zookeeper:3.7
+    ports:
+      - "2181:2181"
+    volumes:
+      - "~/zk-cluster/zk/data:/data"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - compose-networks
+
+  kafka-0:
+    image: wurstmeister/kafka:latest
+    ports:
+      - "9092:9092"
+    volumes:
+      - "kafka_0_data:/kafka"
+    environment:
+      - KAFKA_BROKER_ID=0
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR= 3
+    depends_on:
+      - zookeeper
+    networks:
+      - compose-networks
+
+  mysql:
+    image: mysql:oracle
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+    command:
+      - --authentication_policy=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./datadir:/var/lib/mysql
+    user: mysql
+
+networks:
+  compose-networks:
+    driver: bridge
+
+volumes:
+  zookeeper_data:
+    driver: local
+  kafka_0_data:
+    driver: local
+  kafka_1_data:
+    driver: local
+  kafka_2_data:
+    driver: local
