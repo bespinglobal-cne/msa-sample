@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<title>MSA Maker Demo</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/style.css">
+<style>
+thead {
+	background-color: #1fcd7f !important;
+	color: #fff;
+}
+.font-white {
+	color: #fff !important;
+}
+</style>
+</head>
+<body>
+<script>
+	$(document).ready(function() {
+		moneyDataLoad();
+		pointDataLoad();
+	});
+
+	function txResult(txid) {
+		// Let us open a web socket
+		// notifier와 연동이 필요합니다.
+		var ws = new WebSocket("ws://{{demo-notifier-ip}}:{{notifier-port}}");
+
+		ws.onopen = function() {
+			// Web Socket is connected, send data using send()
+			var request_txid = [txid];
+			ws.send(JSON.stringify({
+				txIdList: request_txid
+			}));
+
+			ws.onmessage = function (event) {
+				if (event.data instanceof Blob) {
+					reader = new FileReader();
+
+					reader.onload = () => {
+						var json = reader.result;
+						var obj = JSON.parse(json);
+						var result_msg = "";
+						if(obj.result == true) {
+							result_msg = "상품 구매에 성공하였습니다.";
+						} else {
+							result_msg = "상품 구매에 실패하였습니다.";
+						}
+						alert(result_msg + "\n tx_id : " + obj.tx_id + " result : " + obj.result);
+						moneyDataLoad();
+						pointDataLoad();
+					};
+					reader.readAsText(event.data);
+				} else {
+					console.log("Result: " + event.data);
+				}
+			};
+
+			ws.onclose = function() {
+				// websocket is closed.
+				alert("Connection is closed...");
+			};
+		};
+
+	}
+
+	$(function (){
+		$("#purchase").on("click", function(){
+			var moneyVal = $('#money_val').val();
+			var pointVal = $('#point_val').val();
+			var priceVal = $('#price_val').val();
+
+			if(vali(moneyVal)) {
+				alert("Money 항목을 입력하세요.");
+				$('#money_val').focus();
+				return;
+			}
+			if(vali(pointVal)) {
+				alert("Point 항목을 입력하세요.");
+				$('#point_val').focus();
+				return;
+			}
+			console.log("money : " + moneyVal);
+			console.log("point : " + pointVal);
+
+			var message = JSON.stringify({
+				name: "demo_kim",
+				money: moneyVal,
+				point: pointVal,
+				price: priceVal
+			})
+
+			productPurchase(message);
+		});
+	});
+
+	function vali(value){
+		if (typeof value === 'undefined') {
+			console.log("undefined");
+			return true;
+		}
+		if (value === null || value === '') {
+			console.log("null or empty");
+			return true;
+		}
+		return false;
+	}
+
+	function productPurchase(message) {
+		$.ajax({
+			url: "demo/purchase",
+			dataType: "json",
+			type: "POST",
+			data: message,
+			contentType:"application/json",
+			success: function (data) {
+				console.log(data);
+				console.log(data.result.tx_id);
+				txResult(data.result.tx_id);
+			}
+		});
+	}
+
+	function moneyDataLoad() {
+		$.ajax({
+			url: "demo/money",
+			dataType: "json",
+			type: "GET",
+			data: {
+				name:"demo_kim"
+			},
+			success: function (data) {
+				console.log(data);
+				var html = '';
+
+				$.each(data, function (i, item) {
+					if (i === 0) {
+							$("#money_balance").empty();
+							$("#money_balance").append(item.balance);
+					}
+
+					html += '<tr>';
+					html += '<td>' + item.id + '</td>';
+					html += '<td>' + item.dateTime + '</td>';
+					html += '<td align="right">' + item.amount + '</td>';
+					html += '<td align="right">' + item.balance + '</td>';
+					html += '<td>' + item.notes + '</td>';
+					html += '</tr>';
+				});
+				$("#money_table").empty();
+				$("#money_table").append(html);
+			}
+		});
+	}
+
+	function pointDataLoad() {
+		$.ajax({
+			url: "demo/point",
+			dataType: "json",
+			type: "GET",
+			data: {
+				name:"demo_kim"
+			},
+			success: function (data) {
+				var html = '';
+				$.each(data, function (i, item) {
+					if (i === 0) {
+						$("#point_balance").empty();
+						$("#point_balance").append(item.balance);
+					}
+
+					html += '<tr>';
+					html += '<td>' + item.id + '</td>';
+					html += '<td>' + item.dateTime + '</td>';
+					html += '<td>' + item.amount + '</td>';
+					html += '<td>' + item.balance + '</td>';
+					html += '<td>' + item.notes + '</td>';
+					html += '</tr>';
+				});
+				$("#point_table").empty();
+				$("#point_table").append(html);
+			}
+		});
+	}
+
+</script>
+<section class="ftco-section">
+	<div class="container">
+
+<!--		<div class="row justify-content-center">-->
+<!--			<div class="col-md-12 text-center mb-5">-->
+<!--				<img src="images/logo.svg" alt="logo" style="display: block; margin: 0px auto; width: 20%;">-->
+<!--				<h1 class="heading-section">Demo : 상품구매 서비스</h1>-->
+<!--			</div>-->
+<!--		</div>-->
+
+		<div class="form-group">
+			<form id="frm" action=''>
+
+				<div class="row">
+
+					<div class="col-4" style="margin-top: auto; margin-bottom: auto;">
+						<img src="images/logo.svg" alt="logo" style="display: block; margin: 0px auto; width: 80%;">
+						<span class="heading-section" style="display: block; margin: 0px auto; width: 80%;">Demo : 상품구매 서비스</span>
+					</div>
+					<div class="col-8" style="font-size: larger">
+						<div class="mb-2 pl-2 row">
+							<label for="price_val" class="col-sm-3 pl-4 col-form-label">Product Price</label>
+							<div class="col-sm-8">
+								<input type="text" readonly class="form-control-plaintext" id="price_val" value="10000" data-name="Price">
+							</div>
+						</div>
+						<div class="mb-2 pl-2 row">
+							<label for="money_val" class="col-sm-3 pl-4 col-form-label">Member Money</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" id="money_val" value="" data-name="Money" placeholder="숫자를 입력하세요">
+							</div>
+						</div>
+
+						<div class="mb-2 pl-2 row">
+							<label for="point_val" class="col-sm-3 pl-4 col-form-label">Member Point</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" id="point_val" value="" data-name="Point" placeholder="숫자를 입력하세요">
+							</div>
+						</div>
+
+						<div class="mb-2 row">
+							<div class="col-11 float-right">
+								<input type="button" value="구매" id="purchase" class="btn btn-success float-right">
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</form>
+
+		</div>
+
+	</div>
+
+
+	<hr>
+	<br>
+
+	<div  class="container-fluid">
+			<div class="row">
+			<div class="col-6"> <!-- table row start -->
+				<div class="row justify-content-center">
+					<div class="col-md-12 text-center mb-5">
+						<h2 class="heading-section">Member Money History Table</h2>
+						<h2 class="heading-section"><span class="badge bg-success font-white">Money Current</span> : <span id="money_balance">0</span> 원</h2>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="table-wrap">
+							<table class="table table-hover table-sm" id="memberMoney">
+								<thead class="thead-success">
+								<tr>
+									<th style="width: 1% !important;">#</th>
+									<th style="width: 25%">Time</th>
+									<th style="width: 20%">입출금 내역</th>
+									<th style="width: 20%">계좌 잔고</th>
+									<th style="width: 30%">거래 내역</th>
+								</tr>
+								</thead>
+								<tbody id="money_table">
+								<tr>
+									<th scope="row">3</th>
+									<td>Larry</td>
+									<td>the Bird</td>
+									<td>larrybird@email.com</td>
+									<td>larrybird@email.com</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+			</div>
+		</div>
+
+			<!--	<div class="container">-->
+			<div class="col-6"> <!-- table row start -->
+			<div class="row justify-content-center">
+				<div class="col-md-12 text-center mb-5">
+					<h2 class="heading-section">Member Point History Table</h2>
+					<h2 class="heading-section"> <span class="badge bg-success font-white">Point Current</span> : <span id="point_balance">0</span> 원</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="table-wrap">
+						<table class="table table-hover table-sm" id="memberPoint">
+							<thead class="thead-primary">
+							<tr>
+								<th style="width: 1% !important;">#</th>
+								<th style="width: 25%">Time</th>
+								<th style="width: 20%"><!--포인트 <br>-->입출금 내역</th>
+								<th style="width: 20%">포인트 잔고</th>
+								<th style="width: 30%">거래 내역</th>
+							</tr>
+							</thead>
+							<tbody id="point_table">
+							<tr>
+								<th scope="row">1</th>
+								<td>Mark</td>
+								<td>Otto</td>
+								<td>markotto@email.com</td>
+								<td>markotto@email.com</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div> <!-- table row end -->
+		</div>
+		</div>
+	</div>
+</section>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/popper.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+server:
+  port: 9000
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+    enabled: true
+
+logging:
+  level:
+    root: INFO
+
+## custom properties
+msamaker:
+  route:
+    id: rt_20220523010636
+  runner:
+    url: http://{{demo-server-ip}}:{{client-port}}     # 설치형 runner와 연동이 필요합니다.
+  services:
+    - url: http://localhost:1007
+    - url: http://localhost:1006
